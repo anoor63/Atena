@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,47 +7,57 @@
   <title>نموذج إنشاء تذكرة</title>
   <style>
     body {
-      margin: 0;
       font-family: 'Cairo', sans-serif;
-      display: flex;
-      height: 100vh;
       background: linear-gradient(to bottom, #4b3b34, #7a5a4a);
       color: #3e2f24;
+      display: flex;
+      min-height: 100vh;
+      margin: 0;
     }
+
     .left {
       width: 40%;
       background: url('شعار اشرقت ابيض-01.png') no-repeat center center;
       background-size: contain;
       background-color: #4b3b34;
     }
+
     .right {
       width: 60%;
-      background-color: #fff;
+      background: #fff;
       padding: 40px;
+      padding-bottom: 100px; /* أضفنا مساحة إضافية أسفل النموذج */
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
+
     h2 {
       color: #4b3b34;
     }
+
     label {
       display: block;
       margin-top: 20px;
       margin-bottom: 6px;
       font-weight: bold;
     }
+
     input, textarea {
       width: 100%;
       padding: 12px;
       border-radius: 10px;
       border: 1px solid #ccc;
       font-size: 16px;
-      box-sizing: border-box;
     }
+
     .buttons {
       margin-top: 30px;
       display: flex;
       gap: 20px;
     }
+
     button {
       flex: 1;
       padding: 12px;
@@ -55,118 +66,142 @@
       border: none;
       cursor: pointer;
     }
+
     .create-btn {
       background-color: #4b7f3c;
       color: white;
     }
+
     .cancel-btn {
       background-color: #ddd;
       color: #333;
     }
+
     .required {
       color: red;
       font-size: 13px;
       margin-top: 4px;
       display: none;
     }
+
     .ticket-id {
       margin-top: 20px;
       font-size: 18px;
       color: #007500;
+      text-align: center;
+    }
+
+    .footer-space {
+      margin-top: 50px;
+      min-height: 40px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="left"></div>
-  <div class="right">
-    <h2>إنشاء تذكرة</h2>
-    <form id="ticketForm" name="ticketForm" novalidate>
-      <label>الشركة</label>
+
+<div class="left"></div>
+<div class="right">
+  <h2>إنشاء تذكرة</h2>
+  <form id="ticketForm" novalidate>
+  <label>الشركة</label>
       <input type="text" value="أشرقت أضاحي" disabled />
+    <label for="type">نوع التذكرة</label>
+    <input type="text" id="type" placeholder="مثلاً: شكوى أو بلاغ" required />
+    <div class="required" id="typeError">هذا الحقل إجباري</div>
 
-      <label for="category">تصنيف التذكرة</label>
-      <input type="text" id="category" name="category" placeholder="مثلاً: شكوى أو بلاغ..." />
-      <div class="required" id="categoryError">هذا الحقل إجباري</div>
+    <label for="category">تصنيف التذكرة</label>
+    <input type="text" id="category" placeholder="مثلاً: تقنية أو دعم" required />
+    <div class="required" id="categoryError">هذا الحقل إجباري</div>
 
-      <label for="name">اسم مقدم التذكرة</label>
-      <input type="text" id="name" name="name" />
-      <div class="required" id="nameError">هذا الحقل إجباري</div>
+    <label for="name">اسم مقدم التذكرة</label>
+    <input type="text" id="name" required />
+    <div class="required" id="nameError">هذا الحقل إجباري</div>
 
-      <label for="nationality">الجنسية</label>
-      <input type="text" id="nationality" name="nationality" />
-      <div class="required" id="nationalityError">هذا الحقل إجباري</div>
+    <label for="nationality">الجنسية</label>
+    <input type="text" id="nationality" required />
+    <div class="required" id="nationalityError">هذا الحقل إجباري</div>
 
-      <label for="phone">رقم التواصل</label>
-      <input type="tel" id="phone" name="phone" pattern="\d{10}" title="يجب أن يكون 10 أرقام" />
-      <div class="required" id="phoneError">رقم الجوال يجب أن يتكون من 10 أرقام</div>
+    <label for="phone">رقم التواصل</label>
+    <input type="tel" id="phone" required 
+	pattern="\d{10}" 
+       maxlength="10" 
+       minlength="10"
+       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" 
+       title="يجب أن يكون 10 أرقام"/>
+    <div class="required" id="phoneError">رقم الجوال يجب أن يتكون من 10 أرقام</div>
+	
 
-      <label for="description">شرح المشكلة</label>
-      <textarea id="description" name="description" rows="4"></textarea>
-      <div class="required" id="descriptionError">هذا الحقل إجباري</div>
 
-      <div class="buttons">
-        <button type="submit" class="create-btn">إنشاء</button>
-        <button type="reset" class="cancel-btn">إلغاء</button>
-      </div>
-    </form>
-    <div id="ticketId" class="ticket-id"></div>
-  </div>
+    <label for="description">شرح المشكلة</label>
+    <textarea id="description" rows="4" required></textarea>
+    <div class="required" id="descriptionError">هذا الحقل إجباري</div>
 
-  <script>
-    function handleSubmit(event) {
-      event.preventDefault();
+    <div class="buttons">
+      <button type="submit" class="create-btn">إنشاء</button>
+      <button type="reset" class="cancel-btn">إلغاء</button>
+    </div>
+  </form>
 
-      let valid = true;
-      const fields = ["category", "name", "nationality", "phone", "description"];
+  <div id="ticketId" class="ticket-id"></div>
+  <div class="footer-space" id="footerMessage"></div>
+</div>
 
-      fields.forEach(id => {
-        const field = document.getElementById(id);
-        const error = document.getElementById(id + "Error");
+<script>
+  document.getElementById('ticketForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-        if (!field.value.trim() || (id === 'phone' && !/^\d{10}$/.test(field.value))) {
-          error.style.display = 'block';
-          valid = false;
-        } else {
-          error.style.display = 'none';
-        }
-      });
+    const showError = (id) => document.getElementById(id).style.display = 'block';
+    const hideAllErrors = () => document.querySelectorAll('.required').forEach(err => err.style.display = 'none');
 
-      if (!valid) return false;
+    hideAllErrors();
+    let valid = true;
 
-      const data = {
-        category: document.getElementById('category').value.trim(),
-        name: document.getElementById('name').value.trim(),
-        nationality: document.getElementById('nationality').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        description: document.getElementById('description').value.trim()
-      };
+    const fields = ['type', 'category', 'name', 'nationality', 'description'];
+    fields.forEach(id => {
+      if (!document.getElementById(id).value.trim()) {
+        showError(id + 'Error');
+        valid = false;
+      }
+    });
 
-      fetch('https://script.google.com/macros/s/AKfycbzIak7ry7ZZoJYcHAWyoLdSBZttmqypKDJLaTy2jWj1RNhz8Gj9GyP68MX3Pw0BiRSt/exec', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(result => {
-        if (result.result === 'success') {
-          document.getElementById('ticketId').innerText = '✅ تم إرسال التذكرة بنجاح. رقم التذكرة: ' + result.ticket;
-          document.getElementById('ticketForm').reset();
-        } else {
-          document.getElementById('ticketId').innerText = '❌ حدث خطأ أثناء الإرسال. حاول مجددًا.';
-        }
-      })
-      .catch(error => {
-        document.getElementById('ticketId').innerText = '❌ حدث خطأ أثناء الإرسال.';
-        console.error('حدث خطأ:', error);
-      });
-
-      return false;
+    const phone = document.getElementById('phone');
+    if (!phone.value.match(/^\d{10}$/)) {
+      showError('phoneError');
+      valid = false;
     }
 
-    document.getElementById('ticketForm').addEventListener('submit', handleSubmit);
-  </script>
+    if (!valid) return;
+
+    const formData = {
+      type: document.getElementById('type').value.trim(),
+      category: document.getElementById('category').value.trim(),
+      name: document.getElementById('name').value.trim(),
+      nationality: document.getElementById('nationality').value.trim(),
+      phone: phone.value.trim(),
+      description: document.getElementById('description').value.trim()
+    };
+
+    fetch('https://script.google.com/macros/s/AKfycbzBZO3UQt7sB64ZZGra_okUcgrFXAcvR_CEuwlbpn-rRhiGlGRMB7QOX2m0RPeuxd3v/exec', {
+      method: 'POST',
+      body: new URLSearchParams(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result === 'success') {
+        document.getElementById('ticketId').textContent = 'تم إنشاء التذكرة بنجاح، رقم التذكرة: ' + data.ticketNumber;
+        document.getElementById('footerMessage').textContent = 'تم الإرسال بنجاح ✅';
+        document.getElementById('ticketForm').reset();
+      } else {
+        document.getElementById('footerMessage').textContent = 'فشل في إنشاء التذكرة ❌';
+      }
+    })
+    .catch(err => {
+      document.getElementById('footerMessage').textContent = 'حدث خطأ أثناء الإرسال ❌';
+      console.error(err);
+    });
+  });
+</script>
 
 </body>
 </html>
